@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/chart.css' %}">
+     <script src="{% static 'js/popup_contingenica.js' %}"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>  
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+ 
+
+  <!-- Tabla de información de URL -->
+  <div class="url-container">
+   <!-- <div class="url-status">
+      <table id="url-status-table">
+        <tr>
+          <th>Descripción</th>
+          <th>Estado</th>
+        </tr>
+          
+      </table>
+    </div>
+  </div>-->
+  <!-- Gráfico sin la clase "container" -->
+  <div>
+   <h2>Resumen Documentos</h2>
+
+    <canvas class="chart" id="chartContainer"></canvas>
+    <button id="toggleChartButton">Cambiar Tipo de Gráfico</button>
+  </div>
+
+  
+  <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html>
