@@ -14,7 +14,7 @@ body {
 
 /* Estilos para el encabezado (header) */
 header {
-  background-color: #2f6ec2;
+  background-color: #e9c67a;
   color: #ececec;
   padding: 10px;
   display: flex;
@@ -80,8 +80,8 @@ header {
     z-index: 1;
     overflow-x: hidden;
     padding-top: 80px;
-    color: #2f6ec2;
-    background-color: #2f6ec2; /* Agrega el color de fondo deseado */
+    color: #14498d;
+    background-color: #14498d; /* Agrega el color de fondo deseado */
     transition: 0.5s;
 }
 .sidebar a {
@@ -281,7 +281,7 @@ table.dataTable th {
   padding: 10px;
   text-decoration: none;
   color: #fff;
-  background-color: #2f6ec2;
+  background-color: #14498d;
   border-radius: 15px;
   margin-bottom: 10px;
   margin: 0 0 5px -10px !important; /* Ajusta los márgenes aquí */
@@ -289,11 +289,11 @@ table.dataTable th {
 }
 
 .sidebar-button:hover {
-  background-color: #2f6ec2;
+  background-color: #14498d;
 }
 
 .sidebar-button.active {
-  background-color: #2f6ec2;
+  background-color: #14498d;
 }
 
 

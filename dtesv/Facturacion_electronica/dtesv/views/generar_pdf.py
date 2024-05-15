@@ -265,10 +265,10 @@ class ger_pdf():
                 Image(        
                 
                         image=IMAGE_PATH,
-                        width=Decimal(100),        
-                        height=Decimal(90),    
+                        width=Decimal(120),        
+                        height=Decimal(100),    
                         )  .paint(
-                        page, Rectangle(Decimal(posiscion_x-99), Decimal(650), Decimal(120), Decimal(120))
+                        page, Rectangle(Decimal(posiscion_x-95), Decimal(650), Decimal(120), Decimal(120))
                 ) 
                 
                 
@@ -282,7 +282,7 @@ class ger_pdf():
                 m: Decimal = Decimal(5)
               
 
-                Paragraph(data['emisor']['nombre'], horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(8),
+                Paragraph(data['emisor']['nombre'], horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(7),
                 padding_top=m,
                         padding_left=m,
                         padding_bottom=m,

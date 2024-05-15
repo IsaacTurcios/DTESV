@@ -27,10 +27,11 @@ def send_emails_for_pending_documents(codigoGeneracion):
             parametros = Parametros.objects.get(company_id=mi_compania)            
             ruta_pdf_file = gen_pdf.gen_pdf.generarPdf(document,codigoGeneracion)
             if os.path.isfile(ruta_pdf_file['pdf_file']): 
-                  result_mail = enviar_email.sent_email(parametros,codigoGeneracion)
-                  estadoml = json.loads(result_mail.content)['result']
+                  #result_mail = enviar_email.sent_email(parametros,codigoGeneracion)
+                  #estadoml = json.loads(result_mail.content)['result']
+                  estadoml = 'Enviado!'
                   
-                  if 'Enviado!' in json.loads(result_mail.content)['result'] :
+                  if    estadoml == 'Enviado!':
                         
                         document.email_enviado = True
                         
@@ -71,7 +72,7 @@ def procesar_documentos(codigoGen):
                 dicto_json = documento_procesado['dic_dte']
                 dicto_json['identificacion']['selloRecibido'] = documento_procesado['selloRecibido']
                 gen_json.gen_json.create_fileJson(None, dicto_json)
-              #  send_emails_for_pending_documents.delay(codigoGen)
+                send_emails_for_pending_documents.delay(codigoGen)
                 resultado = documento_procesado['selloRecibido']
             else:
                 resultado = estado

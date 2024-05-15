@@ -85,6 +85,7 @@ class Documentos(models.Model):
     # Esto permitira ingresar el nuevo campo para los receptores tipo proveedor
     proveedor_id = models.ForeignKey('Proveedor', models.DO_NOTHING, db_column='proveedor_id', blank=True, null=True,related_name = 'documento_proveedor_id' )  # Field name made lowercase.  
 
+    sucursal_id =models.ForeignKey('Sucursales', models.DO_NOTHING, db_column='sucursal_id',default = 2,blank=False, null=False,related_name = 'documento_sucursales' )
 
     @classmethod
     def actualizar_registro(cls, codigo_generacion, nuevo_estado):

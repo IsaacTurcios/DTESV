@@ -37,3 +37,4 @@ from .contingencia import contingencias
 from .vendedores import Vendedores
 from .documentos_lote import DocumentosLote
 from .proveedores import Proveedor
+from .sucursales import Sucursales

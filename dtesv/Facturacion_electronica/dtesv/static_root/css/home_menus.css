@@ -1,6 +1,6 @@
 /* Estilos para la barra de navegación (nav-bar) */
 .nav-bar {
-    background-color:  #2f6ec2;
+    background-color:  #d4c362;
     text-align: right;
     padding: 20px;
     margin-top: 30px; /* Reduzco el margen superior para dejar espacio al encabezado */
@@ -23,7 +23,7 @@
 }
 
 .nav-bar .header-button {
-    background-color:  #2f6ec2;
+    background-color:  #14498d;
     color: rgb(255, 255, 255);
     border: none;
     cursor: pointer;
