@@ -18,6 +18,7 @@ from .rest_api import (
 )
 from .sent_email import sent_email
 from .edicion_receptor import edit_receptor
+from .municipio_emisor import get_municipios_by_departamento
 
 from . contingeciaview import ContingenciaView
 from . get_receptor_from_dte import receptor_from_document
@@ -67,3 +68,4 @@ ProcessLoteDocuments = ProcessLoteDocument
 edit_Documentos = edit_Documento
 DownloadFilesAPIs = DownloadFilesAPI
 GenerateNotaCreditos = GenerateNotaCredito
+get_municipios_by_departamentos = get_municipios_by_departamento

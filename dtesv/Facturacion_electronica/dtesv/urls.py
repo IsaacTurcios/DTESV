@@ -13,6 +13,7 @@ urlpatterns = [
     path('login/', views.CustomLoginViews.as_view(), name='login'),
     path('accounts/profile/', views.profile_view, name='profile'),
     path('home/', views.homes, name='home'),  # Nueva vista después del inicio de sesión
+    path('admin/get_municipios_by_departamento/<str:departamento_id>/', views.get_municipios_by_departamentos, name='get_municipios_by_departamento'),
    # path('documentos/', views.documentos, name='documentos'),
     path('documentos/<str:fecha_desde>/<str:fecha_hasta>/<str:empresa_id>/', views.documento_fecha, name='documentos_fecha'),
     path('documentos/<str:codigoGeneracion>/', views.obtener_datos_documento, name='obtener_datos_documento'),
@@ -20,9 +21,11 @@ urlpatterns = [
     path('process_data/<str:codigoGeneracion>/', views.procesoDatos.as_view(), name='process_data'),
     path('crear_nota_credito/<str:codigoGeneracion>/', views.GenerateNotaCredito.as_view(), name='crear_nota_credito'),
     path('generarPDFS/', views.GenerarPDFS, name='generarPDFS'),
-    path('reprocess_data/<str:fecha_desde>/<str:fecha_hasta>/', views.reprocesoDatos.as_view(), name='reprocess_data'),
+    path('reprocess_data/<str:fecha_desde>/<str:fecha_hasta>/', views.reprocesoDatos.as_view(), name='reproc  ess_data'),
     path('generar_pdf/<str:codigoGeneracion>/', views.ger_pdf.generarPdf, name='generar_pdf'),   
     path('dashboard/', views.dashboard_view, name='dashboard'),
+
+
     path('contingencias/', views.solicitud_contingencias_view, name='contingencias'),
     path('contingencias/procesaLote/<str:codigoGeneracion>/', views.ProcessLoteDocumentConting.as_view(), name='contin_lote_process'),
     path('contingencias/<str:fecha_desde>/<str:fecha_hasta>/<str:empresa_id>/', views.data_contingencias, name='contingencias_solicitud'),

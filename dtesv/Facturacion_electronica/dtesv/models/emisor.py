@@ -12,7 +12,7 @@ class Emisor(models.Model):
     nombrecomercial = models.CharField(db_column='nombreComercial', max_length=150, blank=True, null=True)
     tipoestablecimiento = models.ForeignKey('C009TipoEstablecimiento', models.DO_NOTHING, db_column='tipoEstablecimiento')
     departamento = models.ForeignKey('C012Departamento', models.DO_NOTHING, db_column='departamento', blank=True, null=True ,related_name ='emisor_departamento')
-    municipio = models.ForeignKey('C013Municipio', models.DO_NOTHING, db_column='municipio', blank=True, null=True,related_name ='emisor_municipio')
+    municipio = models.ForeignKey('C013Municipio', models.DO_NOTHING, db_column='municipio', blank=True,null=True,related_name ='emisor_municipio')
     direccion_complemento = models.CharField(max_length=200)
     telefono = models.CharField(max_length=30)
     codestablemh = models.CharField(db_column='codEstableMH', max_length=4, blank=True, null=True)

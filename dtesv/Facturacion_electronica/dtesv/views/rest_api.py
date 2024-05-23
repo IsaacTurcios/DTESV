@@ -70,7 +70,8 @@ class ReceptorDetail(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ReceptorSerializer(data=request.data)
+        departamento_id = request.data.get('departamento')
+        serializer = ReceptorSerializer(data=request.data, context={'departamento_id': departamento_id})
         
          
       #  validate_schema.schemaValidate({'json':request.data}).validate_schema_receptor()
