@@ -14,6 +14,10 @@ urlpatterns = [
     path('accounts/profile/', views.profile_view, name='profile'),
     path('home/', views.homes, name='home'),  # Nueva vista después del inicio de sesión
     path('admin/get_municipios_by_departamento/<str:departamento_id>/', views.get_municipios_by_departamentos, name='get_municipios_by_departamento'),
+<<<<<<< HEAD
+=======
+    path('admin/validate-email-config/', views.validate_email_config, name='validate-email-config'),
+>>>>>>> 45b3af59 (Excluir la carpeta 'dtesv/Facturacion_electronica/media/' del repositorio)
    # path('documentos/', views.documentos, name='documentos'),
     path('documentos/<str:fecha_desde>/<str:fecha_hasta>/<str:empresa_id>/', views.documento_fecha, name='documentos_fecha'),
     path('documentos/<str:codigoGeneracion>/', views.obtener_datos_documento, name='obtener_datos_documento'),
@@ -44,7 +48,7 @@ urlpatterns = [
     path('api/documentos/<str:codigo_generacion>/update-complete/', views.DocumentosUpdateCompleteAPIView.as_view(), name='documentos-update-complete'),
     path('api/documentoslote/', views.DocumentosLoteCreateAPIViews.as_view(), name='documentos-lote'),  
     path('upadate_lote_data/<str:loteId>/', views.ProcessLoteDocuments.as_view(), name='upadate_lote_data'),  
-    path('sentemail/<str:codigoGeneracion>/', views.sent_email, name='sentemail'),
+    path('sentemail/<str:codigoGeneracion>/', views.enviar_correo, name='sentemail'),
     path('editar-receptor/<str:codigo>/', views.edit_receptor, name='editar_receptor'),
     path('api/invalidar/<str:codigoGeneracion>/', views.invalidarDocumento.as_view(), name='invalidar_documento'),
     path('home/tipo_contingencia', views.tipo_contingecias, name='home_tipos_contigencia'),

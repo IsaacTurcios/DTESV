@@ -6,6 +6,7 @@ import dtesv.processes.create_json as gen_json
 import dtesv.processes.invalidDocumento as invelid_doc
 import os
 import dtesv.views.sent_email as enviar_email
+import dtesv.views.sent_email_django as mail_sent
 import traceback
 import redis
 import logging
@@ -28,8 +29,10 @@ def send_emails_for_pending_documents(codigoGeneracion):
             ruta_pdf_file = gen_pdf.gen_pdf.generarPdf(document,codigoGeneracion)
             if os.path.isfile(ruta_pdf_file['pdf_file']): 
                   #result_mail = enviar_email.sent_email(parametros,codigoGeneracion)
-                  #estadoml = json.loads(result_mail.content)['result']
-                  estadoml = 'Enviado!'
+                  result_mail = mail_sent.enviar_correo(parametros,codigoGeneracion)
+
+                  estadoml = json.loads(result_mail.content)['result']
+                  #estadoml = 'Enviado!'
                   
                   if    estadoml == 'Enviado!':
                         

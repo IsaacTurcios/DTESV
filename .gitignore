@@ -1,0 +1,7 @@
+dtesv/Documents/*
+Facturacion_electronica/celery.log
+Facturacion_electronica/dtesv/celery.log    
+private_key.pem
+dtesv/envdtesv
+dtesv/Facturacion_electronica/media/*
+

@@ -20,24 +20,59 @@ import base64
 class InvalidProcessor:
     def invalid_document(self,invalid_doc):
         result = ''
+        codigo_generacion = invalid_doc['codigoGeneracion']
+
+
         fecha_actual = datetime.now()
         fecha_actual_str = fecha_actual.strftime("%Y-%m-%d %H:%M:%S")
-        company_ids = Company.objects.filter(emisor__nombre=invalid_doc['emisor']['nombre']).values_list('id', flat=True)
+        documentos = Documentos.objects.filter(codigoGeneracion=codigo_generacion).first() 
+        company_ids = Company.objects.filter(emisor__nombre=documentos.emisor_id.nombre).values_list('id', flat=True)
 
         parametros = Parametros.objects.filter(company_id = company_ids[0]).first()
-        emisor_data =Emisor.objects.filter(nit = invalid_doc['emisor']['nit']).first() 
-        documentos = Documentos.objects.filter(emisor_id=emisor_data.id, codigoGeneracion=invalid_doc['documento']['codigoGeneracion']).first() 
-        if documentos.estado == 'PROCESADO' and documentos.selloRecibido:
-            validacion_schema =  validateSchema.schemaValidate({'tipo':'anulacion-schema-v2','json':invalid_doc}).validar_schema()
-            if  validacion_schema == True:
-                dic_datos_dte = ({ 'nit':emisor_data.nit,'activo':emisor_data.activo,'passwordPri':base64.b64decode(emisor_data.passwordpri).decode("utf-16") , 'dteJson':invalid_doc})
-                dic_otra_info = ({'ambiente':invalid_doc['identificacion']['ambiente'],'version':invalid_doc['identificacion']['version'],'tipoDte':invalid_doc['documento']['tipoDte'],'pwd':base64.b64decode(emisor_data.mh_auth).decode("utf-16")})    
-                gen_json.gen_json.save_fileJSon(None,dic_datos_dte) 
-               # nombre_archivo = invalid_doc['documento']['codigoGeneracion']+'.json'
-               # mi_json = json.dumps(dic_datos_dte)
-               # with open(nombre_archivo, 'w') as archivo:
-               #     archivo.write(mi_json)
+        emisor_data =Emisor.objects.filter(nit =documentos.emisor_id.nit).first() 
+        
+         
+        emisor = {
+            'nit': emisor_data.nit,
+            'nombre': emisor_data.nombre,
+            'tipoEstablecimiento': emisor_data.tipoestablecimiento.codigo,
+            'nomEstablecimiento': emisor_data.nombrecomercial,
+            'codEstableMH': emisor_data.codestablemh,
+            'codEstable': emisor_data.codestable,
+            'codPuntoVentaMH': emisor_data.codpuntoventamh,
+            'codPuntoVenta': emisor_data.codpuntoventa,
+            'telefono': emisor_data.telefono,
+            'correo': emisor_data.correo
+        }
+        documentojs = {
+                'tipoDte': documentos.tipodocumento.codigo,
+                'codigoGeneracion': documentos.codigoGeneracion,
+                'selloRecibido': documentos.selloRecibido,
+                'numeroControl': documentos.numeroControl,
+                'fecEmi': documentos.fecEmi.strftime("%Y-%m-%d"),
+                'montoIva': documentos.iva,
+                'codigoGeneracionR': None,
+                'tipoDocumento': documentos.receptor_id.tipodocumento_id,
+                'numDocumento': documentos.receptor_id.numdocumento,
+                'nombre': documentos.receptor_id.nombre,
+                'telefono': documentos.receptor_id.telefono,
+                'correo': documentos.receptor_id.correo
+            },
 
+        documento_invalidar = { 'identificacion':invalid_doc['identificacion'],
+                                'emisor':emisor,
+                                'documento':documentojs[0],
+                                'motivo':invalid_doc['motivo']
+
+        }
+
+        if documentos.estado == 'PROCESADO' and documentos.selloRecibido:
+            validacion_schema =  validateSchema.schemaValidate({'tipo':'anulacion-schema-v2','json':documento_invalidar}).validar_schema()
+            if  validacion_schema == True:
+                dic_datos_dte = ({ 'nit':emisor_data.nit,'activo':emisor_data.activo,'passwordPri':base64.b64decode(emisor_data.passwordpri).decode("utf-16") , 'dteJson':documento_invalidar})
+                dic_otra_info = ({'ambiente':parametros.ambiente.codigo,'version':2,'tipoDte':documentos.tipodocumento.codigo,'pwd':base64.b64decode(emisor_data.mh_auth).decode("utf-16")})    
+                gen_json.gen_json.save_fileJSon(None,dic_datos_dte) 
+            
                 result_firma = firmador.get_dte_firma(dic_datos_dte,parametros).get_firma()
                 if result_firma['status'] != 'OK':
                     result = result_firma

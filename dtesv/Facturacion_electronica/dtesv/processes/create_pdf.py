@@ -2,12 +2,14 @@ from io import BytesIO
 from borb.pdf import Document
 
 from borb.pdf.page.page import Page
-from borb.pdf.canvas.color.color import RGBColor
 from borb.pdf.canvas.layout.page_layout.multi_column_layout import SingleColumnLayout
 from decimal import Decimal
+ 
+from borb.pdf.canvas.color.color import RGBColor
 from borb.pdf.canvas.layout.image.image import Image
 from borb.pdf.canvas.layout.table.fixed_column_width_table import FixedColumnWidthTable as Table
 from borb.pdf.canvas.layout.text.paragraph import Paragraph
+
 from borb.pdf.canvas.layout.layout_element import Alignment
 from borb.pdf.canvas.layout.image.barcode import Barcode, BarcodeType
 from borb.pdf.canvas.geometry.rectangle import Rectangle
@@ -26,19 +28,21 @@ import math
 import locale
 from dtesv.models import Documentos ,DocumentosDetalle,ExtencionEntrega,DocumentosAsociados,Pagos
 from django.http import FileResponse, HttpResponse
+import logging
+import traceback
 from dtesv.models  import Parametros
-
+logger = logging.getLogger(__name__)
+ 
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 directorio_actual = os.getcwd()
 mymodule_dir = os.path.join(directorio_actual, 'Facturacion_electronica\\dtesv')
 image_dir = os.path.join(mymodule_dir, 'static\img')
-Documentos_pdf_dir =os.path.join(mymodule_dir, 'documentos\pdf\\')
 from pathlib import Path
 import random
 
+#locale.setlocale( locale.LC_ALL, 'en_CA.UTF-8' )
 locale.setlocale(locale.LC_ALL, 'es_SV.UTF-8')
-
 
 class gen_pdf():
         def __init__(self, args):
@@ -49,7 +53,6 @@ class gen_pdf():
                 num_rows = len(resumen)-1
                 num_cols = 10
                 try:    
-
                         tipo_doc = resumen['tipoDocumento']
                         resumen.pop('tipoDocumento', None)
                         # ======== SI ES FACTURA CONSUMIDOR FINAL ========================
@@ -98,29 +101,34 @@ class gen_pdf():
                         else:
                              resumen.pop('Retencion Renta (-)') 
                              resumen.pop('seguro') 
-                             resumen.pop('flete')    
-                         
+                             resumen.pop('flete') 
+                                   
+
                         table_002 = Table(number_of_rows=len(resumen)-1, number_of_columns=num_cols)  
-                        #table_002 = Table(number_of_rows=num_rows, number_of_columns=num_cols)  
                         table_002._column_widths= [Decimal(0.5), Decimal(1), Decimal(0.5),Decimal(2), Decimal(5), Decimal(1),Decimal(1), Decimal(1), Decimal(1),Decimal(2)]
 
+                        
+
                         for key, value in resumen.items():
+                               
                                if key == 'Total en Letras':
                                      table_002.add(TableCell(Paragraph(str(key+':'+value['valor']), font_size=value['font_size'], horizontal_alignment=value['horizontal_alignment']), column_span=value['column_span']))
                                else:
                                 table_002.add(TableCell(Paragraph(key, font_size=value['font_size'], horizontal_alignment=value['horizontal_alignment']), column_span=value['column_span']))
+
                                 valor_decimal = Decimal(value['valor'])
                                 valor_formateado = locale.currency(valor_decimal, grouping=True)
 
                                 table_002.add(TableCell(Paragraph(str(valor_formateado), font_size=value['font_size'], horizontal_alignment=value['horizontal_alignment'])))
-
+                                
+                                       
                         
                         table_002.set_padding_on_all_cells(Decimal(1), Decimal(1), Decimal(1), Decimal(1))  
                         table_002.outer_borders()  
 
                         return table_002
 
-                except BaseException as err:
+                except Exception as err:
                         print("Error En Query SQL.")
                         print(f"Unexpected {err=}, {type(err)=}")
                         sys.exit(0)
@@ -232,7 +240,7 @@ class gen_pdf():
                 sizeRcustomer = 100
                 if tipoDte == '05':
                       posicionRcustomer = 558
-                      sizeRcustomer = 80    
+                      sizeRcustomer = 80        
 
                 # === DIMENCION / POSISCION DE RECTANGULO  INFORMACION DE DOCUMENTO =================================================
                 r: Rectangle = Rectangle(Decimal(posiscion_x + 200), Decimal(695), Decimal(300), Decimal(90)            
@@ -244,6 +252,7 @@ class gen_pdf():
                   # === DIMENCION / POSISCION DE RECTANGULO  DOCUMENTO REALCION  =================================================
                 r_relariondoc:Rectangle = Rectangle(Decimal(posiscion_x -95 ), Decimal(538), Decimal(595), Decimal(20)            # height
                 )
+
 
                 # === DIMENCION / POSISCION DE RECTANGULO  INFORMACION EMPRESA =================================================
 
@@ -257,10 +266,10 @@ class gen_pdf():
                 Image(        
                 
                         image=IMAGE_PATH,
-                        width=Decimal(100),        
-                        height=Decimal(90),    
+                        width=Decimal(120),        
+                        height=Decimal(100),    
                         )  .paint(
-                        page, Rectangle(Decimal(posiscion_x-99), Decimal(650), Decimal(120), Decimal(120))
+                        page, Rectangle(Decimal(posiscion_x-95), Decimal(650), Decimal(120), Decimal(120))
                 ) 
                 
                 
@@ -274,7 +283,7 @@ class gen_pdf():
                 m: Decimal = Decimal(5)
               
 
-                Paragraph(data['emisor']['nombre'], horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(8),
+                Paragraph(data['emisor']['nombre'], horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(7),
                 padding_top=m,
                         padding_left=m,
                         padding_bottom=m,
@@ -353,10 +362,10 @@ class gen_pdf():
                 page.add_annotation(SquareAnnotation(r, stroke_color=HexColor("#000000")))
                 # ================= RECTANGULO DE  INFORMACION DE CLIENTE =====================================================================================
                 page.add_annotation(SquareAnnotation(r_customer, stroke_color=HexColor("#000000")))
+
                 if tipoDte == '05':
                         # ===============================RECTANGULO DOC RELACION ===================================
                         page.add_annotation(SquareAnnotation(r_relariondoc, stroke_color=HexColor("#000000")))
-
 
 
                 codigo_generacion =data['identificacion']['codigoGeneracion']
@@ -392,9 +401,8 @@ class gen_pdf():
                 correo_cliente = str(data['receptor']['correo'])
                 direccion_cliente = str(data['receptor']['complemento'])
                 municipio_cliente  = data['receptor']['municipio']
-                vendedor = data['receptor']['vendedor']   
-                rutaEntrega = data['receptor']['rutaEntrega']  
-
+                vendedor = data['receptor']['vendedor']  
+                rutaEntrega = data['receptor']['rutaEntrega']  if   data['receptor']['rutaEntrega']  else 'CXC'                            
                 incoterms = data['receptor']['incoterms']
                 departamento_cliente =  data['receptor']['departamento']
                 NIT_cliente = str(data['receptor']['numDocumento'])
@@ -771,28 +779,28 @@ class gen_pdf():
                 
                 Paragraph("Vendedor:", horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(7),
                 padding_top=vertical_position,
-                        padding_left=m+250,
+                        padding_left=m+200,
                         padding_bottom=m,
                         padding_right=m,
 
                 ).paint(page, r_customer)
                 Paragraph(vendedor, horizontal_alignment=Alignment.LEFT,font="Helvetica",font_size = Decimal(7),
                 padding_top=vertical_position,
-                        padding_left=m+290,
+                        padding_left=m+240,
                         padding_bottom=m,
                         padding_right=m,
-
                 ).paint(page, r_customer)
+
 
                 Paragraph("Entrega:", horizontal_alignment=Alignment.LEFT,font="Helvetica-Bold",font_size = Decimal(7),
                 padding_top=vertical_position,
-                        padding_left=m+310,
+                        padding_left=m+270,
                         padding_bottom=m,
                         padding_right=m,
                 ).paint(page, r_customer)
                 Paragraph(rutaEntrega, horizontal_alignment=Alignment.LEFT,font="Helvetica",font_size = Decimal(7),
                 padding_top=vertical_position,
-                        padding_left=m+340,
+                        padding_left=m+300,
                         padding_bottom=m,
                         padding_right=m,
                 ).paint(page, r_customer)
@@ -960,6 +968,8 @@ class gen_pdf():
 
                         ).paint(page, r_relariondoc)
 
+
+
                 pagina_actual = data['pagina_actual']
                 pagina_final = data['total_paginas']
 
@@ -990,6 +1000,7 @@ class gen_pdf():
                                         ).paint(
                                         page, Rectangle(Decimal(posiscion_x+30), Decimal(250), Decimal(120), Decimal(120))
                                         )
+
                 return page
                 #except Exception as err:
                 #        print("Error en PDF.")
@@ -997,7 +1008,7 @@ class gen_pdf():
                 #        sys.exit(0)
 
 
-        def generarPdf(self, codigoGeneracion):
+        def generarPdf(request, codigoGeneracion):
                 documentorel={}
                 documentos = Documentos.objects.filter(codigoGeneracion = codigoGeneracion).first()
                 if documentos.numeroDocumento_rel_guid:
@@ -1006,12 +1017,11 @@ class gen_pdf():
                                         ,'fecEmi':documento_rel.fecEmi}
                 else:
                       documentorel = None
+
                 parametros = Parametros.objects.filter(company_id = documentos.emisor_id.company.id).first()
-                
                 lineas= []
                 # ++++++++++++++++++++++ DATOS LIENA DETALLE+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
                 DocumentosDetalle_new = list(DocumentosDetalle.objects.filter(codigoGeneracion_id = codigoGeneracion))
-
                 tipo_doc_use = documentos.tipodocumento_id        
                 for doc in DocumentosDetalle_new:
                     if tipo_doc_use == '14':
@@ -1022,13 +1032,15 @@ class gen_pdf():
                                                 'codigo':doc.codigo,'codTributo':None,'uniMedida':doc.uniMedida,
                                                 'descripcion':doc.descripcion,'precioUni':doc.precioUni,
                                                 'montoDescu':doc.montoDescu,'ventaNoSuj':doc.ventaNoSuj,'ventaExenta':doc.ventaExenta,
-                                                'ventaGravada':ventaGravada,'tributos':None,'psv':doc.psv,
+                                                'ventaGravada':ventaGravada,
+                                                'tributos':None,'psv':doc.psv,
                                                 'noGravado':doc.noGravado,'ivaItem':doc.ivaItem })
                     
                 # ==================== DATOS  RESUMEN =======================================================================
                 pagos = Pagos.objects.filter(codigogeneracion_doc = codigoGeneracion).first()
-                
-                 
+                logger.info(f" datos: {lineas}", exc_info=True)
+                traceback.print_exc()
+               
                 resumen = {
                             'totalNoSuj': {
                                 'valor': documentos.totalNoSuj,
@@ -1217,7 +1229,7 @@ class gen_pdf():
                 
                 for key in key_for_resumen:
                     if key in resumen:
-                        resumen_copia[key] = resumen[key]                
+                        resumen_copia[key] = resumen[key]     
                                 # ============================ IDENTIFICACION =====================================================================
              
                 identificacion ={'version':documentos.tipodocumento.version_work,'ambiente':documentos.emisor_id.ambiente_trabajo,
@@ -1227,7 +1239,8 @@ class gen_pdf():
                              'motivoContin':documentos.motivoContin if documentos.motivoContin else None ,'fecEmi':documentos.fecEmi.strftime('%Y-%m-%d')
                             ,'horEmi':documentos.horEmi.strftime('%H:%M:%S'),'tipoMoneda':documentos.tipoMoneda,'selloRecibido':documentos.selloRecibido if documentos.selloRecibido else 'NO ENVIADO'
                             ,'condicionOperacion':documentos.condicionOperacion.codigo,'nombreDocumento':documentos.tipodocumento.valor,'Documento_interno' : documentos.num_documento ,
-                              'estado':documentos.estado}
+                              'estado':documentos.estado
+                                                                                                                 }    
              
                 #=========================== INFO EMPRESA ===========================================================================
                 info_empresa = {'ID':documentos.emisor_id.id,'nit':documentos.emisor_id.nit,'nrc':documentos.emisor_id.nrc,'nombre':documentos.emisor_id.nombre,
@@ -1288,7 +1301,7 @@ class gen_pdf():
                  
                  
                 cantidad_lineas = len(lineas)
-                if cantidad_lineas >= max_lineas or cantidad_lineas > 29:
+                if cantidad_lineas >= max_lineas or cantidad_lineas >= 26:
                      total_pages = 0
                      int_pages =   math.trunc(cantidad_lineas/ max_lineas)
                      dec_page = (cantidad_lineas/ max_lineas) - int_pages
@@ -1298,7 +1311,7 @@ class gen_pdf():
 
                      else:
                         total_pages = int_pages
-                     if cantidad_lineas > 45:
+                     if cantidad_lineas > 45:   
                         max_lineas = 45
                      detalle_list = list(gen_pdf.divide_chunks(lineas, max_lineas))
                    #  n= round(cantidad_lineas/ total_pages )
@@ -1316,7 +1329,7 @@ class gen_pdf():
                         dic_final = {'emisor':info_empresa,'receptor':info_cliente,'cuerpoDocumento':lineas,'resumen':resumen_copia,'identificacion':identificacion
                         ,'pagina_actual':pagina_actual,'total_paginas':total_pages,'size':26,'documentoRelacionado':documentorel}
                         page = gen_pdf.factura_pdf(dic_final)
-                        pdf.add_page(page)        
+                        pdf.add_page(page)       
                 
                 file_path = parametros.attachment_files_path+codigoGeneracion + ".pdf"                 
 

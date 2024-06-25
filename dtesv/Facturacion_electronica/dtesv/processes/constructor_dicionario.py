@@ -543,7 +543,7 @@ class DocumentoDiccionarioStruc:
                     "descActividad": documentos.proveedor_id.codactividad.nombre,
                     "direccion": {
                         "departamento": documentos.proveedor_id.departamento.codigo,
-                        "municipio": documentos.proveedor_id.municipio.codigo,
+                        "municipio": str(documentos.proveedor_id.municipio.codigo),
                         "complemento": documentos.proveedor_id.complemento,
                     },
                     "telefono": documentos.proveedor_id.telefono,
@@ -599,7 +599,7 @@ class DocumentoDiccionarioStruc:
                # logger.error(document_list, exc_info=True)
                # traceback.print_exc()
         # RETORNO EL LIST CON LOS DOCUMENTO
-               
+            #logger.error(f"Error Constructo Diccionario: {document_list}", exc_info=True)   
             return document_list
         except Exception as e:
             logger.error(f"Error Constructo Diccionario: {e}", exc_info=True)
@@ -617,8 +617,8 @@ class DocumentoDiccionarioStruc:
                     schema_name = 'contingencia-schema-v3'
 
                 
-                logger.info(f"Valores: documento['identificacion']['codigoGeneracion']: {documento['identificacion']['codigoGeneracion']}")
-                logger.info(f"Valores: schema_name: {schema_name}")
+               # logger.info(f"Valores: documento['identificacion']['codigoGeneracion']: {documento['identificacion']['codigoGeneracion']}")
+               # logger.info(f"Valores: schema_name: {schema_name}")
                 validacion_schema =  validateSchema.schemaValidate({'tipo':schema_name,'json':documento}).validar_schema()
                 list_validacion.append({'codigoGeneracion':documento['identificacion']['codigoGeneracion'],'result':validacion_schema})
 
@@ -691,17 +691,17 @@ class DocumentoDiccionarioStruc:
                    
                    return result
             else:
-               logger.error(f"Error en FirmaDocumentos: {items_con_status_firma_falso}", exc_info=True)
+              # logger.error(f"Error en FirmaDocumentos: {items_con_status_firma_falso}", exc_info=True)
                return items_con_status_firma_falso
 
         else:
-            logger.error(f"Error en FirmaDocumentos: {items_con_result_falso}", exc_info=True)
+           # logger.error(f"Error en FirmaDocumentos: {items_con_result_falso}", exc_info=True)
             return items_con_result_falso
 
     def envio_mh(nit,pwd,Parametros,documentosFirmaddos):
         uth_data = ({'user':nit,'pwd':pwd})
         token = autenticador.authenticate(uth_data,Parametros).get_token()
-        logger.error(f"respuesta_mh_authmh: {token}", exc_info=True)
+        #logger.error(f"respuesta_mh_authmh: {token}", exc_info=True)
         traceback.print_exc()
         respuesta_dte_mh=[]
         if token['status'] == 'OK':
@@ -736,7 +736,7 @@ class DocumentoDiccionarioStruc:
         #logger.error(f"datos_firmador: {documentosFirmaddos[0]}", exc_info=True)
         #if documentosFirmaddos[0]['dic_dte']['identificacion']['tipoDte'] == '07':
         #    gen_json.gen_json.create_fileJSonLocal(None, documentosFirmaddos[0])    
-        logger.error(f"datos_Doc: {respuesta_dte_mh}", exc_info=True)
+        #logger.error(f"datos_Doc: {respuesta_dte_mh}", exc_info=True)
         traceback.print_exc()
         return respuesta_dte_mh
         

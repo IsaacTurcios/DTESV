@@ -29,6 +29,8 @@ from . process_doc_lote_contig import ProcessLoteDocumentConting
 from . create_nota_credito import GenerateNotaCredito
 from . GenerarPDFMasivo import GenerarPDFS
 from . edit_documento import edit_Documento
+from . validate_email import validate_email_config
+from . sent_email_django import enviar_correo
 # siendo el archivo view  la vista principal llamo las otras vistas  y las asigno a variables que seran llamadas desde las url
 CustomLoginViews = CustomLoginView
 profile_views = profile_view
@@ -68,4 +70,9 @@ ProcessLoteDocuments = ProcessLoteDocument
 edit_Documentos = edit_Documento
 DownloadFilesAPIs = DownloadFilesAPI
 GenerateNotaCreditos = GenerateNotaCredito
+<<<<<<< HEAD
 get_municipios_by_departamentos = get_municipios_by_departamento
+=======
+get_municipios_by_departamentos = get_municipios_by_departamento
+validate_email_configs = validate_email_config
+>>>>>>> 45b3af59 (Excluir la carpeta 'dtesv/Facturacion_electronica/media/' del repositorio)

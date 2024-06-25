@@ -120,7 +120,9 @@ class ProveedorDetail(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        serializer = ProveedorSerializer(data=request.data)
+        departamento_id = request.data.get('departamento')
+        serializer = ProveedorSerializer(data=request.data, context={'departamento_id': departamento_id})
+         
         
          
       #  validate_schema.schemaValidate({'json':request.data}).validate_schema_receptor()
@@ -326,18 +328,21 @@ class InvalidacionClass(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
-
+        data['codigoGeneracion'] = kwargs['codigoGeneracion']
+        
+        
         
         
          
         # Llamar al método InvalidProcessor con el diccionario completo
-        #processor = InvalidProcessor.invalid_document(self,data)        
-        processor =  invalidacion_documento.delay(data)
+        processor = InvalidProcessor.invalid_document(self,data)        
+        #processor =  invalidacion_documento.delay(data)
 
         response_data = {
             "message": "Documento Invalidador",
-            "documento": data['identificacion']['codigoGeneracion'],
-            "result_processor": processor.id
+            "documento": data['codigoGeneracion'],
+            #"result_processor": processor.id
+             "result_processor": data['codigoGeneracion']
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)

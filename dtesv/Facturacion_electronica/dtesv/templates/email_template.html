@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Factura Electrónica</title>
+</head>
+<body>
+    <p>Estimado/a {{ cliente }},</p>
+    <p>a continuación encontrara adjuntos de su documento electrónico #{{ documento.codigoGeneracion }}  el cual contiene los siguientes detalles:</p>
+    <table border="1" cellpadding="5" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Dato</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Código de Generación</td>
+                <td>{{ documento.codigoGeneracion }}</td>
+            </tr>
+            <tr>
+                <td>Sello Recibido</td>
+                <td>{{ documento.selloRecibido }}</td>
+            </tr>
+            <tr>
+                <td>Fecha de Emisión</td>
+                <td>{{ documento.fecEmi }}</td>
+            </tr>
+            <tr>
+                <td>Monto Total</td>
+                <td>{{ documento.montoTotalOperacion }}</td>
+            </tr>
+            <!-- Añade más campos según sea necesario -->
+        </tbody>
+    </table>
+    <p>Agradecemos su confianza.</p>
+    <p>Atentamente,</p>
+    <p>SISTEC S.A. de C.V.</p>
+</body>
+</html>

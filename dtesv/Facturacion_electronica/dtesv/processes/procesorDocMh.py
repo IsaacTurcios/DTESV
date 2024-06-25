@@ -99,7 +99,7 @@ class DataProcessor:
                     "estado": resultado["estado"],
                     "cadena": resultado,
                 }
-            logger.error(f"Error en proceso datos: {resultado2}", exc_info=True)
+          #  logger.error(f"Error en proceso datos: {resultado2}", exc_info=True)
             data_update = DataProcessor.process_result_data(documentos, resultado2)
             if data_update:
                 results.append(data_update)
@@ -110,11 +110,11 @@ class DataProcessor:
     def process_result_data( document, result):
         updates_fields=[]
         if isinstance(document,str):
-           logger.info(f" datos: {document}", exc_info=True)
+          # logger.info(f" datos: {document}", exc_info=True)
            traceback.print_exc()  
            retorno = document
         else:
-                    logger.error(f"datos_retorno: {result}", exc_info=True)
+                   # logger.error(f"datos_retorno: {result}", exc_info=True)
                     is_receptor_error = ()
                # try:
                     retorno =None

@@ -38,3 +38,4 @@ from .vendedores import Vendedores
 from .documentos_lote import DocumentosLote
 from .proveedores import Proveedor
 from .sucursales import Sucursales
+from .email_dtesv import EmailConfig

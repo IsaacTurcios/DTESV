@@ -1,0 +1,12 @@
+<!-- templates/admin/validate_email_config.html -->
+
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+  <h2>Validar Configuración de Correo</h2>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="default">Validar</button>
+  </form>
+{% endblock %}

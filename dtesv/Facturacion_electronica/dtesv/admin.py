@@ -5,9 +5,13 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import UserChangeForm
 from django.core.exceptions import ValidationError
-from .models import User , Company ,Parametros ,Emisor ,Vendedores,Sucursales,C013Municipio
+from .models import User , Company ,Parametros ,Emisor ,Vendedores,Sucursales,C013Municipio,Proveedor ,EmailConfig
 from django_celery_beat.models import PeriodicTask, IntervalSchedule, CrontabSchedule
-# Register your models here.
+from django.urls import path
+from django.utils.html import format_html
+from dtesv.views import views
+from dtesv.forms import EmailConfigForm
+
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = User
@@ -69,12 +73,26 @@ class EmisorAdmin(admin.ModelAdmin):
     class Media:
         js = ('js/emisor_admin.js',)
 
+
+class EmailConfigAdmin(admin.ModelAdmin):
+    form = EmailConfigForm
+    list_display = ('email_host_user', 'validate_button')
+
+    def validate_button(self, obj):
+        return format_html('<a class="button" href="{}">Validar Configuración</a>', f'/dtesv/admin/validate-email-config/')
+
+    validate_button.short_description = 'Validar Configuración'
+    validate_button.allow_tags = True
+
+    
+
 admin.site.register(User,CustomUserAdmin)
 admin.site.register(Company,CompanyAdmin)
 admin.site.register(Parametros)
 admin.site.register(Emisor,EmisorAdmin)
 admin.site.register(Vendedores)
 admin.site.register(Sucursales,SucursalesAdmin)
-
+admin.site.register(Proveedor)
+admin.site.register(EmailConfig,EmailConfigAdmin)
 
 admin.site.site_header = 'Panel de Administración DTESV'
